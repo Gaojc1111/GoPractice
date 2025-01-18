@@ -18,17 +18,17 @@ func New() *Engine {
 	}
 }
 
+func (engine *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
+	log.Printf("Route %-4s - %s", method, pattern) // "-" 左对齐
+	engine.router.addRoute(method, pattern, handler)
+}
+
 func (engine *Engine) GET(pattern string, handler HandlerFunc) {
 	engine.addRoute("GET", pattern, handler)
 }
 
 func (engine *Engine) POST(pattern string, handler HandlerFunc) {
 	engine.addRoute("POST", pattern, handler)
-}
-
-func (engine *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
-	log.Printf("Route %-4s - %s", method, pattern) // "-" 左对齐
-	engine.router.addRoute(method, pattern, handler)
 }
 
 func (engine *Engine) Run(addr string) (err error) {
