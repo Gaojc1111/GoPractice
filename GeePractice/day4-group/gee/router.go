@@ -63,9 +63,9 @@ func (r *router) getRoute(method, path string) (*node, map[string]string) {
 	}
 
 	// 2. 获取path对应的前缀树节点
-	// parts := parsePattern(path) 因为请求的path是确定的，直接分割就行
-	searchParts := strings.Split(path, "/")
-	searchParts = searchParts[1:] // 去掉空串""
+	//searchParts := strings.Split(path, "/")
+	//searchParts = searchParts[1:] // 去掉空串""
+	searchParts := parsePattern(path)
 	n := root.search(searchParts, 0)
 
 	if n == nil {

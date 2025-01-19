@@ -92,14 +92,29 @@ func (r *router) getRoute(method, path string) (*node, map[string]string) {
 	return n, params
 }
 
+// 获取HTTP方法对应的所有路由
+func (r *router) getRoutes(method string) []*node {
+	root, ok := r.roots[method]
+	if !ok {
+		return nil
+	}
+	nodes := make([]*node, 0)
+	root.travel(&nodes)
+	return nodes
+}
+
 func (r *router) handle(c *Context) {
 	n, params := r.getRoute(c.Method, c.Path)
 	if n == nil {
-		c.String(http.StatusNotFound, "%s页面不存在\n", c.Path)
-		return
+		c.handlers = append(c.handlers, func(c *Context) {
+			c.String(http.StatusNotFound, "%s页面不存在\n", c.Path)
+		})
+	} else {
+		c.Params = params
+		key := fmt.Sprintf("%s-%s", c.Method, n.pattern)
+		c.handlers = append(c.handlers, r.handlers[key]) // middleware 和 handler 顺序调用
 	}
 
-	c.Params = params
-	key := fmt.Sprintf("%s-%s", c.Method, n.pattern)
-	r.handlers[key](c)
+	c.Next()
+	return
 }
