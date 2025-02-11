@@ -1,4 +1,4 @@
-package day2_single_node
+package geecache
 
 import (
 	"fmt"
