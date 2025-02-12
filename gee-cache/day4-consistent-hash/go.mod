@@ -1,4 +1,4 @@
-module day3-http-server
+module day4-consistent-hash
 
 go 1.23
 
